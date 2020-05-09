@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>FLOOP::Freesound loop browser</title>
+        <script data-main="js/main" src="js/require-jquery.js"></script>
+        <style type="text/css">
+        body{
+            background-color: black;
+        }
+        div.bar {
+            display: inline-block;
+            width: 20px;
+            height: 75px;
+            background-color: white;
+            margin-right: 2px;
+        }
+        .link {
+            stroke: #ccc;
+            stroke-width:0.5;
+
+        }
+        div {
+            //border:1px solid red;
+        }
+        #messages{
+            display:block;
+            height:200px;
+            width:200px;
+            color:white;
+            font-family: verdana;
+            font-size: 24px,
+        }
+        #controls{
+            height:500px;
+
+        }
+        </style>
+    </head>
+    <body>
+        <table border="0">
+            <tr>
+                <td valign="top" width="250"><div id="hist"/></td>
+                <td valign="top" width="800"><div id="results"/></td>
+                <td valign="top" width="200">
+                    <div id="messages"></div>
+                    <div id="controls"></div>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
