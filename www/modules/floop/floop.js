@@ -14,7 +14,7 @@ function(freesound,EventEmitter,server,hist,graph,player,ae,sched,msg){
     var fs_sounds=[];
     console.log(freesound);
     var init = function(){
-            freesound.setToken('<freesoun_api_token');
+            freesound.setToken('<freesound_api_token>');
             last_instance_id = 0;
             window.freesound = freesound;
             window.emitter= new EventEmitter();
