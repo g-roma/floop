@@ -3,7 +3,9 @@
     <head>
         <meta charset="utf-8">
         <title>FLOOP::Freesound loop browser</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
         <script data-main="js/main" src="js/require-jquery.js"></script>
+
         <style type="text/css">
         body{
             background-color: black;
@@ -31,9 +33,29 @@
             font-family: verdana;
             font-size: 24px,
         }
+
+        #users{
+            display:block;
+            height:200px;
+            width:200px;
+            color:white;
+            font-family: verdana;
+            font-size: 24px,
+        }
+
         #controls{
             height:500px;
-
+        }
+        #login{
+          position: absolute;
+          top: 30%;
+          left: 30%;
+          display:block;
+          height:200px;
+          width:200px;
+          color:white;
+          font-family:Helvetica;
+          font-size: 18px,
         }
         </style>
     </head>
@@ -43,10 +65,21 @@
                 <td valign="top" width="250"><div id="hist"/></td>
                 <td valign="top" width="800"><div id="results"/></td>
                 <td valign="top" width="200">
+                    <div id="users"></div>
                     <div id="messages"></div>
                     <div id="controls"></div>
                 </td>
             </tr>
         </table>
+        <div id="login">
+  <form id="loginform">
+    <h3>Login</h3>
+    <label for="nickname"><b>nickname</b></label>
+    <input type="text" name="nickname" required>
+    <label for="password"><b>password</b></label>
+    <input type="password"  name="password" required>
+    <button type="submit" class="btn">go</button>
+  </form>
+</div>
     </body>
 </html>

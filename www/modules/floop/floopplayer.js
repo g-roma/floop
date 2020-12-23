@@ -1,66 +1,73 @@
-define(["ae/ae","ae/sched"],function(ae,sched){
+define(["floop/floopsound","floop/floopsched"], function(fsound, sched){
 
-    var active = [];
-    var sounds = {};
-    var loadSound = function(sound){
-        var snd = ae.Sound();
-        var rect = d3.select("#sndrect_"+parseInt(sound.id));
-        snd.load(sound['previews']['preview-hq-mp3'],function(data){
-            sounds[parseInt(sound.id)]=snd;
-            var rect = d3.select("#sndrect_"+snd_id);
+    let active = [];
+    let sounds = {};
+
+    let init = function(){
+            emitter.addListener('node_play', load_and_play);
+            emitter.addListener('load_sound', load_sound);
+            emitter.addListener('panic', panic);
+     };
+
+    let load_sound = function(sound){
+        let snd = fsound.Sound();
+        let rect = d3.select("#sndrect_" + parseInt(sound.id));
+        snd.load(sound['previews']['preview-hq-mp3'], (data) => {
+            sounds[parseInt(sound.id)] = snd;
+            let rect = d3.select("#sndrect_" + snd_id);
             rect.attr("stroke", "white");
             active.push(snd_id);
             sched.add_sound(sounds[snd_id]);
         });
     }
-    var playSound = function(val,i){
+
+    let play_sound = function(val,i){
         snd_id = parseInt(val.id);
-        var idx = active.indexOf(snd_id);
-        console.log("play sound "+snd_id);
-        if(idx>=0){
-            stopSound(snd_id,idx);
+        let idx = active.indexOf(snd_id);
+        if(idx >= 0){
+            stop_sound(snd_id,idx);
         }
         else{
-            var rect = d3.select("#sndrect_"+snd_id);
+            let rect = d3.select("#sndrect_"+snd_id);
             rect.attr("stroke", "white");
             active.push(snd_id);
             sched.add_sound(sounds[snd_id]);
         }
     }
 
-    var loadAndPlay = function(sound,idx){
-        var snd = ae.Sound();
-        var snd_id = sound.id;
-        var rect = d3.select("#sndrect_"+parseInt(sound.id));
-        var is_playing = active.indexOf(snd_id);
-        if(is_playing>=0){
-            stopSound(sound.id,idx);
-	   }
-	   else{
-            snd.load( gsounds[parseInt(sound.id)]['previews']['preview-hq-mp3'],function(data){
- 		         sounds[parseInt(sound.id)]=snd;
-            	var rect = d3.select("#sndrect_"+snd_id);
-            	rect.attr("stroke", "white");
-            	active.push(snd_id);
-            	sched.add_sound(sounds[snd_id]);
-	       })
+    let load_and_play = function(sound, idx, color = "white"){
+        let snd = fsound.Sound();
+        let snd_id = sound.id;
+        let rect = d3.select("#sndrect_" + parseInt(sound.id));
+        let is_playing = active.indexOf(snd_id);
+        if (is_playing >= 0) stop_sound(sound.id, idx);
+	      else {
+            snd.load( gsounds[parseInt(sound.id)]['previews']['preview-hq-mp3'],
+            (data) =>{
+ 		           sounds[parseInt(sound.id)] = snd;
+               let rect = d3.select("#sndrect_"+snd_id);
+               rect.attr("stroke", color);
+               active.push(snd_id);
+               sched.add_sound(sounds[snd_id]);
+	            })
         }
     }
-    var stopSound = function(snd_id,idx){
-        var rect = d3.select("#sndrect_"+snd_id);
-        rect.attr("stroke",gsounds[snd_id].color);
-        active.splice(idx,1);
+
+    let stop_sound = function(snd_id, idx) {
+        let rect = d3.select("#sndrect_" + snd_id);
+        rect.attr("stroke", gsounds[snd_id].color);
+        let pos = active.indexOf(snd_id);
+        if (pos >= 0) active.splice(pos, 1);
         sounds[snd_id].stop();
         sched.remove_sound(sounds[snd_id]);
     }
 
-    var init = function(){
-            emitter.addListener('node_click',loadAndPlay);
-            emitter.addListener('load_sound',loadSound);
-     };
+    let panic = function(){
+      active.forEach(stop_sound);
+    }
 
     return {
         init: init,
-        playSound:playSound
+        play_sound:play_sound
     }
 });
