@@ -1,17 +1,17 @@
-from aiohttp import web
 import socketio
-import random, time, sys, os
-import subprocess
 import json
+import os
+
+from aiohttp import web
 from numpy import *
 from scipy.io import *
 from scipy.spatial.distance import *
 from scipy.cluster.vq import *
 from sklearn.neighbors import NearestNeighbors
 
-app_path = '' # path to directory containing this file
-app_password = '' # password for all users
-freesound_token = ''# freesound API token
+app_path = os.getenv('APPLICATION_ROOT', '') # path to directory containing this file
+app_password = os.getenv('APPLICATION_PWD', '') # password for all users
+freesound_token = os.getenv('FREESOUND_API_KEY', '') # freesound API token
 
 sio = socketio.AsyncServer()
 app = web.Application()
@@ -94,12 +94,12 @@ async def disconnect(sid):
         username = users[sid]
         if username in usernames:
             usernames.remove(username)
-            del usernames[username]
+            #del usernames[username]
         del users[sid]
     await sio.emit('logged_users', usernames)
 
-app.router.add_static('/js/', path = str(app_path + "/" + 'www/js'), name = 'js')
-app.router.add_static('/modules/', path = str(app_path + "/" +'www/modules'), name = 'modules')
+app.router.add_static('/js/', path = os.path.join(app_path, 'www/js'), name = 'js')
+app.router.add_static('/modules/', path = os.path.join(app_path, 'www/modules'), name = 'modules')
 app.router.add_get('/', index)
 app.router.add_get('/index/token', get_token)
 app.router.add_get('/index/get_sounds_for_period', get_sounds_for_period)

@@ -1,0 +1,10 @@
+version: '2'
+services:
+  floop:
+    build: .
+    env_file:
+        - .env
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./persistent_data.json:/app/code/persistent_data.json
