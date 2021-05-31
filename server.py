@@ -15,7 +15,7 @@ app_path = os.getenv('APPLICATION_ROOT', '/code/') # path to directory containin
 app_password = os.getenv('APPLICATION_PWD', '') # password for all users
 freesound_token = os.getenv('FREESOUND_API_KEY', '') # freesound API token
 
-sio = socketio.AsyncServer()
+sio = socketio.AsyncServer(cors_allowed_origins='*')
 app = web.Application()
 sio.attach(app, socketio_path=url_prefix + "/socket.io")
 
