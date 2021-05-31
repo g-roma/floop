@@ -17,7 +17,7 @@ freesound_token = os.getenv('FREESOUND_API_KEY', '') # freesound API token
 
 sio = socketio.AsyncServer()
 app = web.Application()
-sio.attach(app)
+sio.attach(app, socketio_path=url_prefix + "/socket.io")
 
 data = {}
 users = {}

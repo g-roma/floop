@@ -46,7 +46,7 @@ define(function(){
     }
 
     let init = function(){
-        socket = io.connect();
+        socket = io.connect({path: '/floop/socket.io'});
         socket.on('message', (msg) => { console.log(msg)});
         socket.on('play', (data) => {
           let snd,idx,usr;
