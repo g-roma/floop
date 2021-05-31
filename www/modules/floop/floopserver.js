@@ -1,5 +1,5 @@
 define(function(){
-    var  base_url= "/";
+    var  base_url= "/floop/";
 
     var init = function(){
             emitter.addListener('hist_click', get_sounds_for_period);
