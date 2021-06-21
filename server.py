@@ -1,21 +1,23 @@
-from aiohttp import web
 import socketio
-import random, time, sys, os
-import subprocess
 import json
+import os
+
+from aiohttp import web
 from numpy import *
 from scipy.io import *
 from scipy.spatial.distance import *
 from scipy.cluster.vq import *
 from sklearn.neighbors import NearestNeighbors
 
-app_path = '' # path to directory containing this file
-app_password = '' # password for all users
-freesound_token = ''# freesound API token
 
-sio = socketio.AsyncServer()
+url_prefix = '/floop' # prefix of all url server paths (without trailing slash) - note that if this is changed, floopserver.js should be updated as well
+app_path = os.getenv('APPLICATION_ROOT', '/code/') # path to directory containing this file
+app_password = os.getenv('APPLICATION_PWD', '') # password for all users
+freesound_token = os.getenv('FREESOUND_API_KEY', '') # freesound API token
+
+sio = socketio.AsyncServer(cors_allowed_origins='*')
 app = web.Application()
-sio.attach(app)
+sio.attach(app, socketio_path=url_prefix + "/socket.io")
 
 data = {}
 users = {}
@@ -94,16 +96,16 @@ async def disconnect(sid):
         username = users[sid]
         if username in usernames:
             usernames.remove(username)
-            del usernames[username]
+            #del usernames[username]
         del users[sid]
     await sio.emit('logged_users', usernames)
 
-app.router.add_static('/js/', path = str(app_path + "/" + 'www/js'), name = 'js')
-app.router.add_static('/modules/', path = str(app_path + "/" +'www/modules'), name = 'modules')
-app.router.add_get('/', index)
-app.router.add_get('/index/token', get_token)
-app.router.add_get('/index/get_sounds_for_period', get_sounds_for_period)
-app.router.add_get('/index/get_histogram', get_histogram)
+app.router.add_static(url_prefix + '/js/', path = os.path.join(app_path, 'www/js'), name = 'js')
+app.router.add_static(url_prefix + '/modules/', path = os.path.join(app_path, 'www/modules'), name = 'modules')
+app.router.add_get(url_prefix + '/', index)
+app.router.add_get(url_prefix + '/index/token', get_token)
+app.router.add_get(url_prefix + '/index/get_sounds_for_period', get_sounds_for_period)
+app.router.add_get(url_prefix + '/index/get_histogram', get_histogram)
 
 if __name__ == '__main__':
     load_data()
