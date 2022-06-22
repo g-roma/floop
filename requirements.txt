@@ -6,7 +6,7 @@ chardet==4.0.0
 idna==3.2
 joblib==1.0.1
 multidict==5.1.0
-numpy==1.20.3
+numpy==1.22.0
 python-engineio==4.2.0
 python-socketio==5.3.0
 scikit-learn==0.24.2
